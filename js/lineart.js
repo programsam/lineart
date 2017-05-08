@@ -32,6 +32,8 @@ $(document).ready(function(){
 
 function clearDrawing(e) {
 	canvas.clear();
+	circle = new fabric.Circle({left:left, top:mytop, radius: 3})
+	canvas.add(circle)
 }
 
 function stopDrawing(e) {
@@ -62,7 +64,9 @@ function nextLine() {
 		endOK = false;
 		
 		direction = randomWithRange(0,4)
-		length = randomWithRange(0,$("#length")[0].value)
+		var minlength = parseInt($("#length")[0].value.split(",")[0])
+		var maxlength = parseInt($("#length")[0].value.split(",")[1])
+		length = randomWithRange(minlength, maxlength)
 		
 		if (repeats)
 		{
@@ -161,10 +165,20 @@ function nextLine() {
 	canvas.renderAll();
 }
 
-
+//create a Mersenne Twister-19937 that is auto-seeded based on time and other random values
+var engine = Random.engines.mt19937().autoSeed();
+var distribution;
 function randomWithRange(min, max)
 {
-	var randomPart = Math.random() * max;
-	
-	return Math.floor(min+randomPart);
+	var goodrandom = $("#goodrandom")[0].checked
+	if (goodrandom)
+	{
+		var distribution = Random.integer(min, max);
+		return distribution(engine)
+	}
+	else
+	{
+		var randomPart = Math.random() * max;
+		return Math.floor(min+randomPart);
+	}
 }
