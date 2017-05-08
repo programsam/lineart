@@ -7,3 +7,13 @@
 #mainCanvas {
 	border: solid
 }
+
+.slider-selection {
+	background: #BABABA;
+}
+
+
+
+.slider.slider-horizontal {
+	width: 130px;
+}
