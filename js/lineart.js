@@ -2,14 +2,15 @@ var left = 0;
 var mytop = 0;
 var maxwidth = 0;
 var maxheight = 0;
-var canvas;
+var canvas, clock;
+var previousDirection = -1;
 
 $(document).ready(function(){
 	
 	maxwidth = $('#mainCanvas').parent().width();
 	maxheight = $(document).height() - 80;
 	
-	canvas = new fabric.Canvas('mainCanvas', 
+	canvas = new fabric.StaticCanvas('mainCanvas', 
 			{ width: maxwidth,
 			  height: maxheight
 			});
@@ -17,13 +18,41 @@ $(document).ready(function(){
 	left = maxwidth / 2;
 	mytop = maxheight / 2;
 
-	setInterval(nextLine, 0)
+	clock = setInterval(nextLine, 0);
+	$('#stop').click(stopDrawing)
+	$('#clear').click(clearDrawing)
+	$('#start').click(startDrawing)
 	
+	$('#ex1').slider({
+		formatter: function(value) {
+			return 'Current value: ' + value;
+		}
+	});
 });
+
+function clearDrawing(e) {
+	canvas.clear();
+}
+
+function stopDrawing(e) {
+	clearInterval(clock);
+	clock = null;
+}
+
+function startDrawing(e) {
+	if (clock == null)
+	{
+		clock = setInterval(nextLine, 0)
+	}
+}
 
 function nextLine() {
 	
-	var direction = randomWithRange(0,4)
+	direction = previousDirection;
+	while (direction == previousDirection)
+	{
+		direction = randomWithRange(0,4)
+	}
 	var length = randomWithRange(0,80)
 	var x = 0;
 	var y = 0;
