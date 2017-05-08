@@ -121,7 +121,7 @@ function nextLine() {
 		{
 			doublebacksOK = true;
 		}
-		else
+		else //doublebacks are not allowed
 		{
 			doublebacksOK = true;
 			if (direction == 0 && previousDirection == 2)
@@ -186,8 +186,6 @@ function nextLine() {
 		        strokeWidth: 1
 		    }));
 	
-//	canvas.renderAll();
-	
 	if ((direction == 0) && (left + length < maxwidth)) // left to right
 	{
 		left = left + length;
@@ -213,7 +211,6 @@ function nextLine() {
 	}
 }
 
-//create a Mersenne Twister-19937 that is auto-seeded based on time and other random values
 var engine
 var distribution;
 var prevMin, prevMax;
