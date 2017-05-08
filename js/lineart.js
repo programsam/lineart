@@ -6,10 +6,12 @@ var canvas, clock;
 var direction;
 var circle;
 
+var colors = ["red","green","blue","purple","black","pink","orange","gray"]
+
 $(document).ready(function(){
 	
 	maxwidth = $('#mainCanvas').parent().width();
-	maxheight = $(document).height() - 80;
+	maxheight = $(document).height() - 20;
 	
 	canvas = new fabric.StaticCanvas('mainCanvas', 
 			{ width: maxwidth,
@@ -19,21 +21,51 @@ $(document).ready(function(){
 	left = maxwidth / 2;
 	mytop = maxheight / 2;
 	
-	circle = new fabric.Circle({left:left, top:mytop, radius: 3})
-	canvas.add(circle)
+	if ($("#cursor")[0].checked)
+	{
+		circle = new fabric.Circle({left:left, top:mytop, radius: 3})
+		canvas.add(circle)
+	}
 
 	$('#stop').click(stopDrawing)
 	$('#clear').click(clearDrawing)
 	$('#start').click(startDrawing)
+	$('#cursor').click(startCursor)
+	$('#jump').click(jumpCursor)
 	
 	$('#speed').slider({reversed: true});
 	$('#length').slider({});
+	$('#jumpiness').slider({});
 });
+
+function jumpCursor(e) {
+	left = randomWithRange(0, maxwidth);
+	mytop = randomWithRange(0, maxheight);
+}
 
 function clearDrawing(e) {
 	canvas.clear();
-	circle = new fabric.Circle({left:left, top:mytop, radius: 3})
-	canvas.add(circle)
+	left = maxwidth / 2;
+	mytop = maxheight / 2;
+	if ($("#cursor")[0].checked)
+	{
+		circle = new fabric.Circle({left:left, top:mytop, radius: 3})
+		canvas.add(circle)
+	}
+}
+
+function startCursor(e)
+{
+	if ($("#cursor")[0].checked)
+	{
+		circle = new fabric.Circle({left:left, top:mytop, radius: 3})
+		canvas.add(circle);
+	}
+	else
+	{
+		canvas.remove(circle);
+		circle = null;
+	}
 }
 
 function stopDrawing(e) {
@@ -49,6 +81,13 @@ function startDrawing(e) {
 }
 
 function nextLine() {
+	
+	var jumpOrNot = randomWithRange(0,1000)
+	if (jumpOrNot < $("#jumpiness")[0].value)
+	{
+			left = randomWithRange(0, maxwidth);
+			mytop = randomWithRange(0, maxheight);
+	}
 	
 	var doublebacks = $("#doublebacks")[0].checked
 	var repeats = $("#repeats")[0].checked
@@ -134,13 +173,20 @@ function nextLine() {
 		y = mytop;
 	}
 	
+	var color = "black";
+	if ($("#colors")[0].checked)
+	{
+		var colorindex = randomWithRange(0, colors.length)
+		color = colors[colorindex]
+	}
+	
 	canvas.add(new fabric.Line([left,mytop,x,y], 
 			 {
-		        stroke: 'black',
+		        stroke: color,
 		        strokeWidth: 1
 		    }));
 	
-	canvas.renderAll();
+//	canvas.renderAll();
 	
 	if ((direction == 0) && (left + length < maxwidth)) // left to right
 	{
@@ -159,26 +205,50 @@ function nextLine() {
 		mytop = mytop - length;
 	}
 	
-	circle.setLeft(left);
-	circle.setTop(mytop);
-	
-	canvas.renderAll();
+	if ($("#cursor")[0].checked)
+	{
+		circle.setLeft(left);
+		circle.setTop(mytop);
+		canvas.renderAll();
+	}
 }
 
 //create a Mersenne Twister-19937 that is auto-seeded based on time and other random values
-var engine = Random.engines.mt19937().autoSeed();
+var engine
 var distribution;
+var prevMin, prevMax;
 function randomWithRange(min, max)
 {
-	var goodrandom = $("#goodrandom")[0].checked
-	if (goodrandom)
+	var randomness = $("#randomness")[0].value
+	if (randomness == "0")
 	{
-		var distribution = Random.integer(min, max);
+		if (! engine)
+			engine = Random.engines.browserCrypto
+		if (! distribution || min != prevMin || max != prevMax)
+		{
+			distribution = Random.integer(min, max);
+			prevMin = min;
+			prevMax = max;
+		}
 		return distribution(engine)
 	}
-	else
+	else if (randomness == "1")
+	{
+		if (! engine)
+			 engine = Random.engines.mt19937().autoSeed();
+		
+		if (! distribution || min != prevMin || max != prevMax)
+		{
+			distribution = Random.integer(min, max);
+			prevMin = min;
+			prevMax = max;
+		}
+		return distribution(engine)
+	}
+	else if (randomness == "2")
 	{
 		var randomPart = Math.random() * max;
 		return Math.floor(min+randomPart);
 	}
+	
 }

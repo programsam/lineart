@@ -39,45 +39,29 @@
 	<script src="js/lineart.js"></script>
   </head>
   <body>
-     <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" style="cursor: default">Lineart</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li><a href="#">Top</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
-
-	<div class="container-fluid navbar-pad">
+     <div class="container-fluid navbar-pad">
 		<div class="row">
 			<div class="col-sm-10 col-md-10 col-lg-10">
 				<canvas id='mainCanvas' style="height: 100%"></canvas>
 			</div>
-			<div class="col-sm-2 col-md-2 col-lg-2">
-				<div class="panel panel-default hidden-xs">
+			<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h3 class="panel-title">Controls</h3>
 					</div>
 					<div class="panel-body">
 						<div class="form-group">
-							<button id='stop' type="button" class="btn btn-default" aria-label="Left Align">
+							<button id='stop' type="button" class="btn btn-default" aria-label="Stop">
 	  							<span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
 							</button>    
-							<button id='clear' type="button" class="btn btn-default" aria-label="Left Align">
+							<button id='clear' type="button" class="btn btn-default" aria-label="Clear">
 	  							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 							</button> 
-							<button id='start' type="button" class="btn btn-default" aria-label="Left Align">
+							<button id='start' type="button" class="btn btn-default" aria-label="Go">
 	  							<span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+							</button>
+							<button id='jump' type="button" class="btn btn-default" aria-label="Jump">
+	  							<span class="glyphicon glyphicon-send" aria-hidden="true"></span>
 							</button>
 						</div>
 						<div class="form-group">
@@ -90,9 +74,15 @@
 							<label for="length">Length</label> 
 							<input id="length" data-slider-id='lengthSlider' type="text" 
 								data-slider-min="2" 
-								data-slider-max="500" 
+								data-slider-max="200" 
 								data-slider-step="1" 
-								data-slider-value="[5,50]"/>
+								data-slider-value="[2,15]"/>
+							<label for="jumpiness">Jumpiness</label> 
+							<input id="jumpiness" data-slider-id='jumpinessSlider' type="text" 
+								data-slider-min="0" 
+								data-slider-max="50" 
+								data-slider-step="1" 
+								data-slider-value="0"/>
 						</div>
 						<div class="form-group">
 						<div class="checkbox">
@@ -107,9 +97,20 @@
 						</div>
 						<div class="checkbox">
 						  <label>
-						    <input id="goodrandom" type="checkbox"> Good random()
+						    <input id="colors" type="checkbox"> Colors
 						  </label>
 						</div>
+						<div class="checkbox">
+						  <label>
+						    <input id="cursor" type="checkbox"> Draw Cursor
+						  </label>
+						</div>
+						<label for="randomness">Randomness</label>
+						<select class="form-control" id="randomness">
+							<option value="0">Browser Crypto</option>
+							<option value="1">mt19937</option>
+							<option value="2">Math.random()</option>
+						</select>
 						</div>
 					</div>
 				</div> <!-- Panel -->
