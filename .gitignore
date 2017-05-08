@@ -1,3 +1,8 @@
+# Eclipse project file
+# It should not change.
+
+.project
+
 # Logs
 logs
 *.log
